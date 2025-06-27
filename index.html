@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #1d1d1f;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 90vw;
+            width: auto;
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.8s ease-out;
+            display: inline-block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .image-container {
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover {
+            transform: scale(1.02);
+        }
+
+        .placeholder-image {
+            width: 100%;
+            height: auto;
+            min-height: 150px;
+            max-height: 80vh;
+            aspect-ratio: 16/9;
+            background: linear-gradient(45deg, #e0e0e0, #f0f0f0);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* For actual images */
+        .image-container img {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .placeholder-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #007aff 0%, #0051d5 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 122, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 200px;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 122, 255, 0.4);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Loading screen styles */
+        .loading-container {
+            display: none;
+            text-align: center;
+            max-width: 400px;
+            width: 90vw;
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .loading-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #007aff 0%, #0051d5 100%);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 2s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShimmer 1.5s infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .progress-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e0e0e0;
+            border-top: 2px solid #007aff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto 0;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Completion screen styles */
+        .completion-container {
+            display: none;
+            text-align: center;
+            max-width: 400px;
+            width: 90vw;
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .completion-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .completion-message {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.02);
+            }
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: checkmarkBounce 0.6s ease-out;
+            box-shadow: 0 10px 30px rgba(52, 199, 89, 0.3);
+        }
+
+        @keyframes checkmarkBounce {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .checkmark::before {
+            content: '✓';
+            font-size: 2.5rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Fade out animation */
+        .fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+                max-width: 95vw;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .placeholder-image {
+                min-height: 120px;
+                max-height: 60vh;
+            }
+            
+            .image-container img {
+                max-height: 60vh;
+            }
+            
+            .loading-container {
+                padding: 30px 20px;
+                margin: 10px;
+                max-width: 95vw;
+            }
+            
+            .loading-title {
+                font-size: 1.6rem;
+            }
+            
+            .completion-container {
+                padding: 30px 20px;
+                margin: 10px;
+                max-width: 95vw;
+            }
+            
+            .completion-title {
+                font-size: 1.8rem;
+            }
+            
+            .completion-message {
+                font-size: 1.1rem;
+            }
+            
+            .checkmark {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .checkmark::before {
+                font-size: 2rem;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d30 100%);
+                color: #f5f5f7;
+            }
+            
+            .container {
+                background: rgba(28, 28, 30, 0.95);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .loading-container {
+                background: rgba(28, 28, 30, 0.95);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .progress-container {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            .progress-text {
+                color: #a1a1a6;
+            }
+            
+            .loading-spinner {
+                border-color: #48484a;
+                border-top-color: #007aff;
+            }
+            
+            .completion-container {
+                background: rgba(28, 28, 30, 0.95);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .completion-message {
+                color: #a1a1a6;
+            }
+            
+            .placeholder-image {
+                background: linear-gradient(45deg, #3a3a3c, #48484a);
+                color: #a1a1a6;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h1>MARSO3D</h1>
+        
+        <div class="image-container">
+            <img src="vase.png">
+        </div>
+        
+        <button class="cta-button" onclick="handleButtonClick()">
+            BUY
+        </button>
+    </div>
+
+    <div class="loading-container" id="loadingContainer">
+        <h2 class="loading-title">delivering..</h2>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="progress-text" id="progressText">0%</div>
+        
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="completion-container" id="completionContainer">
+        <div class="checkmark"></div>
+        <h2 class="completion-title">Complete!</h2>
+        <p class="completion-message">Check your window</p>
+    </div>
+
+    <script>
+        function handleButtonClick() {
+            const button = document.querySelector('.cta-button');
+            const mainContainer = document.getElementById('mainContainer');
+            const loadingContainer = document.getElementById('loadingContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            // Add button click animation
+            button.style.transform = 'scale(0.95)';
+            
+            // Fade out main container
+            setTimeout(() => {
+                mainContainer.classList.add('fade-out');
+                
+                // Show loading container after fade out
+                setTimeout(() => {
+                    mainContainer.style.display = 'none';
+                    loadingContainer.style.display = 'block';
+                    
+                    // Start progress animation
+                    startProgressAnimation();
+                }, 500);
+            }, 150);
+        }
+
+        function startProgressAnimation() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const loadingContainer = document.getElementById('loadingContainer');
+            const completionContainer = document.getElementById('completionContainer');
+            let progress = 0;
+            
+            // Animate progress to 99%
+            const interval = setInterval(() => {
+                if (progress < 99) {
+                    progress += Math.random() * 3; // Random increment for realistic feel
+                    if (progress > 99) progress = 99;
+                    
+                    progressBar.style.width = progress + '%';
+                    progressText.textContent = Math.floor(progress) + '%';
+                } else {
+                    clearInterval(interval);
+                    
+                    // Wait a moment at 99%, then complete
+                    setTimeout(() => {
+                        // Quickly jump to 100%
+                        progressBar.style.width = '100%';
+                        progressText.textContent = '100%';
+                        
+                        // Show completion screen after a brief delay
+                        setTimeout(() => {
+                            loadingContainer.classList.add('fade-out');
+                            
+                            setTimeout(() => {
+                                loadingContainer.style.display = 'none';
+                                completionContainer.style.display = 'block';
+                            }, 500);
+                        }, 800);
+                    }, 1000);
+                }
+            }, 50);
+        }
+
+        // Add subtle parallax effect on scroll (mobile-friendly)
+        window.addEventListener('scroll', () => {
+            const container = document.querySelector('.container');
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            container.style.transform = `translateY(${rate}px)`;
+        });
+
+        // Add touch feedback for mobile
+        document.querySelector('.cta-button').addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+
+        document.querySelector('.cta-button').addEventListener('touchend', function() {
+            this.style.transform = '';
+        });
+    </script>
+</body>
+</html>
